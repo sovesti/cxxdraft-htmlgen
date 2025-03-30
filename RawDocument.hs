@@ -278,7 +278,7 @@ parseFile macros =
 
 loadFigure :: Text -> Text
 loadFigure f = unsafePerformIO $ do
-		dot <- readFile $ "assets/" ++ p
+		dot <- readFile p
 		svg <- readProcess "dot" ["-Tsvg",
 			"-Gbgcolor=transparent",
 			"-Gsize=8",

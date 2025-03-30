@@ -109,7 +109,7 @@ instance AllUnits RawFootnote where
 	allUnits (RawFootnote x) = allUnits x
 
 bnfEnvs :: [String]
-bnfEnvs = ["bnf", "ncbnf", "bnfkeywordtab", "simplebnf", "ncsimplebnf", "ncrebnf"]
+bnfEnvs = ["bnf", "ncbnf", "ncbnftab", "bnftab", "bnfkeywordtab", "simplebnf", "ncsimplebnf", "ncrebnf"]
 
 isBnf :: LaTeXUnit -> Bool
 isBnf (TeXEnv s _ _)
@@ -537,6 +537,7 @@ loadMacros extraMacros =
 	. snd
 	. doParse initialMacros
 	. replace "\\indeximpldef{" "\\index[impldefindex]{"
+	. replace "\\hspace*" "\\hspace"
 	. textSubRegex (mkRegex "\\\\penalty[0-9]+{}") ""
 	. textSubRegex (mkRegex "\\\\verbtocs{[\\a-zA-Z]*}\\|[^|]*\\|") ""
 	. rmExplSyntax

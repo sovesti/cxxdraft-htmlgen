@@ -244,6 +244,28 @@ div.bnf span.texttt { font-family: 'Noto Sans Mono'; font-style: normal; }
 	line-height: 1.5;
 }
 
+.bnftab {
+	font-family: serif;
+	font-style: italic;
+	margin-left: 40pt;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.ncbnftab {
+	font-family: serif;
+	font-style: italic;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: 40pt;
+}
+
+.bnfkeywordtab {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: 40pt;
+}
+
 span.textnormal {
 	font-style: normal;
 	font-family: 'Noto Serif';

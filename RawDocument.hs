@@ -192,6 +192,7 @@ parseFile macros =
 	. replace "\\hspace*" "\\hspace"
 	. replace "``" "“"
 	. replace "''" "”"
+	. replace "\\SOH" "" -- ??????????
 
 	. textSubRegex (mkRegex "{([A-Za-z0-9-]*) \\\\choose ([A-Za-z0-9-]*)}") "\\binom{\1}{\2}"
 	. textSubRegex (mkRegex "(\\grammarterm\\{[A-Za-z-]*\\})\\{s\\}") "\\1\\textit{s}"

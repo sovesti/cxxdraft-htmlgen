@@ -159,7 +159,7 @@ signatures =
 	where
 		a 0 = "today def makeatletter bottomline makeatother Sec left right bmod " ++
 			"chapter section paragraph subparagraph fi otextup linebreak newpage log kill " ++
-			"textup edef x itcorrwidth itletterwidth small BnfIndent setlength par leq vfill " ++
+			"textup edef x itcorrwidth itletterwidth small BnfIndent setlength par leq vfill pagebreak " ++
 			"leftmargini BnfInc BnfRest kern protect textsmaller caret sum clearpage " ++
 			"xspace onelineskip textlangle textrangle textunderscore tilde raggedright = " ++
 			"space copyright textregistered textbackslash hsize makebox nocorr br Gamma " ++

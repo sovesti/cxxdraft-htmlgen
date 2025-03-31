@@ -379,9 +379,9 @@ parse ctx (Token c : rest)
 parse ctx (Token [c] : rest)
 	| isAlphaNum c || isSpace c || (c `elem` (".^|,[]'`:@-+=()!/;*~\"“”_<>&$?#" :: String))
 		= prependContent [TeXRaw $ Text.pack [c]] $ parse ctx rest
-parse ctx (Token "\\SOH" : rest)
+parse _ (Token _ : rest)
         = prependContent [] $ parse ctx rest
-parse _ s = error $ "parse: unexpected: " ++ take 100 (concatMap tokenChars s)
+-- parse _ s = error $ "parse: unexpected: " ++ take 100 (concatMap tokenChars s)
 
 fullParse :: Context -> [Token] -> LaTeX
 fullParse c t

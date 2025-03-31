@@ -47,4 +47,3 @@ main = do
 	writeFootnotesFile sectionFileStyle draft
 	writeFullFile sectionFileStyle draft
 	writeSectionFiles sectionFileStyle draft
-	writeXrefDeltaFiles sectionFileStyle draft

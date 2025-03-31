@@ -511,14 +511,12 @@ load14882 = do
 
 		extra <-
 			if c /= "grammar" then return ""
-			else replace "\\gramSec" "\\rSec1" . readFile "std-gram.ext"
+			else replace "\\gramSec" "\\rSec1" . readFile "grammar.tex"
 
 		let r = parseFile macros (stuff ++ extra)
 
 		putStrLn $ show (length r) ++ " sections"
 		return r
-
-	xrefDelta <- loadXrefDelta
 
 	if length (show secs) == 0 then undefined else do
 		-- force eval before we leave the dir

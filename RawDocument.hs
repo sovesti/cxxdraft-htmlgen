@@ -140,7 +140,7 @@ initialContext :: Parser.Context
 initialContext = Parser.defaultContext
 	{ Parser.dontEval = (bnfEnvs ++) $ words $
 			"drawing definition importgraphic itemdescr nontermdef defnx " ++
-			"indented note example tabular longtable enumeratea"
+			"indented note example tabular longtable enumeratea mathcal"
 	, Parser.kill = ["clearpage", "enlargethispage", "noindent",
 			"indent", "vfill", "pagebreak", "!", "-", "glossary",
 			"itcorr", "hfill", "nocorr", "small", "kill", "lstset",
@@ -160,7 +160,7 @@ signatures =
 		a 0 = "today def makeatletter bottomline makeatother Sec left right bmod " ++
 			"chapter section paragraph subparagraph fi otextup linebreak newpage log kill " ++
 			"textup edef x itcorrwidth itletterwidth small BnfIndent setlength par leq vfill pagebreak " ++
-			"leftmargini BnfInc BnfRest kern protect textsmaller caret sum clearpage " ++
+			"leftmargini BnfInc BnfRest kern protect textsmaller smaller sim caret sum clearpage " ++
 			"xspace onelineskip textlangle textrangle textunderscore tilde raggedright = " ++
 			"space copyright textregistered textbackslash hsize makebox nocorr br Gamma " ++
 			"frenchspacing list leftmargin listparindent itemindent rmfamily itshape relax " ++
@@ -170,13 +170,13 @@ signatures =
 			"lfloor rfloor pi geq neq ge lceil rceil ell alpha bigl bigr mu lambda beta " ++
 			"tabularnewline exp sigma big delta rho Pi nu infty displaystyle lim sin cos " ++
 			"phi int theta zeta FlushAndPrintGrammar hfill break backslash centering " ++
-			"normalbaselineskip"
+			"normalbaselineskip ident prime \""
 		a 1 = "hspace footnote textit textrm textnormal texttt textbf ensuremath ref mbox " ++
 			"terminal enlargethispage nontermdef textsl textsc text grammarterm term " ++
 			"tcode descr footnotetext microtypesetup cline mathtt mathit mathrm mathsf " ++
 			"newcolumntype label newlength uline vspace value newcounter mathscr hyperref " ++
 			"phantom sqrt ln emph lstset minipage url indexescape changeglossnumformat " ++
-			"removedxref deprxref"
+			"removedxref deprxref mathcal"
 		a 2 = "pnum addtolength definition defnx addtocounter setcounter frac glossary " ++
 			"binom infannex normannex parbox link weblink indexedspan movedxref movedxrefs"
 		a 3 = "multicolumn discretionary definecolor deflinkx linkx liblinkx movedxrefii"

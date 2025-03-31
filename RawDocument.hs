@@ -183,6 +183,15 @@ signatures =
 		a 4 = "movedxrefiii"
 		a _ = undefined
 
+nonbraces :: String
+nonbraces = "[^{}]*"
+
+braced :: String -> String
+braced str = nonbraces ++ "(?:{" ++ str ++ "}" ++ nonbraces ++ ")*"
+
+double_braced :: String
+double_braced = "(" ++ (braced (braced nonbraces)) ++ ")"
+
 parseFile :: Macros -> Text -> [LinearSection]
 parseFile macros =
 	parseSections 0
@@ -194,6 +203,7 @@ parseFile macros =
 	. replace "''" "”"
 
 	. textSubRegex (mkRegex "{([A-Za-z0-9+-]*) \\\\choose ([A-Za-z0-9-]*)}") "\\binom{\1}{\2}"
+	. textSubRegex (mkRegex "{" ++ double_braced ++ "\\\\over" ++ double_braced ++ "}") "{\\frac{\1}{\2}}"
 	. textSubRegex (mkRegex "(\\grammarterm\\{[A-Za-z-]*\\})\\{s\\}") "\\1\\textit{s}"
 		-- Mixing italic and upright looks okay in the PDF, but looks bad in browsers,
 		-- and our linkification makes clear enough that the plural 's' is not part

@@ -118,6 +118,19 @@ parseSignature t = case optArgs of
 	_ -> error "unrecognized signature"
 	where (optArgs, t') = parseOptArgs t
 
+parseNewCounter :: Context -> [Token] -> ParseResult
+parseNewCounter c@Context{..} (Token name : Token "}" : rest) =
+	let
+		maybe_rest = balanced ('[', ']') rest
+		rest'' = case maybe_rest of
+					Just (_, after) -> after
+					Nothing -> rest
+		m = Macros mempty mempty (Map.singleton (Text.pack name) 0)
+		ParseResult p mm r = parse c{macros = macros ++ m} rest''
+	in
+		ParseResult p (m ++ mm) r
+parseNewCounter _ x = error $ "parseNewCounter: unexpected: " ++ take 100 (show x)
+
 parseNewCmd :: Context -> [Token] -> ParseResult
 parseNewCmd c@Context{..} (Token ('\\' : name) : Token "}" : rest) =
 	let
@@ -320,6 +333,29 @@ parseCmd c@Context{..} cmd ws rest
 		in
 			ParseResult p (m ++ mm) r
 	| cmd == "def" = parse c $ snd $ fromJust $ balanced ('{', '}') $ dropWhile (/= Token "{") rest
+	| cmd == "setcounter"
+	, Just ([TeXRaw counter], rest') <- parseFixArg c rest
+	, Just ([TeXRaw newValue], rest'') <- parseFixArg c rest' =
+		let
+			m = Macros mempty mempty (Map.singleton counter (read $ Text.unpack newValue))
+			ParseResult p mm r = parse c{macros=macros++m} rest''
+		in
+			ParseResult p (m ++ mm) r
+	| cmd == "addtocounter"
+	, Just ([TeXRaw counter], rest') <- parseFixArg c rest
+	, Just ([TeXRaw addend], rest'') <- parseFixArg c rest' =
+		let
+			Just value = Map.lookup counter (counters macros)
+ 			m = Macros mempty mempty (Map.singleton counter (value + (read $ Text.unpack addend)))
+			ParseResult p mm r = parse c{macros=macros++m} rest''
+		in
+			ParseResult p (m ++ mm) r
+	| cmd == "value"
+	, Just ([TeXRaw counter], rest') <- parseFixArg c rest =
+		let
+			Just value = Map.lookup counter (counters macros)
+		in
+			prependContent [TeXRaw $ Text.pack $ show (value :: Int)] (parse c rest')
 
 	| Just signature <- lookup cmd signatures =
 		let
@@ -360,6 +396,7 @@ parse c (Token ['\\', ch] : x)
 parse c (Token ('\\':'v':'e':'r':'b':':':arg) : rest) =
 	prependContent [TeXComm "verb" [(FixArg, [TeXRaw $ Text.pack arg])]] (parse c rest)
 parse c (Token "\\let" : _ : _ : s) = parse c s -- todo
+parse c (Token "\\newcounter" : Token "{" : s) = parseNewCounter c s
 parse c (Token "\\newcommand" : Token "{" : s) = parseNewCmd c s
 parse c (Token "\\renewcommand" : Token "{" : s) = parseNewCmd c s
 parse c (Token "\\newenvironment" : Token "{" : s) = parseNewEnv c s

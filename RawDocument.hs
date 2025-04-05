@@ -140,7 +140,7 @@ initialContext :: Parser.Context
 initialContext = Parser.defaultContext
 	{ Parser.dontEval = (bnfEnvs ++) $ words $
 			"drawing definition importgraphic itemdescr nontermdef defnx " ++
-			"indented note example tabular longtable enumeratea"
+			"indented note example tabular longtable enumeratea addtocontents"
 	, Parser.kill = ["clearpage", "enlargethispage", "noindent",
 			"indent", "vfill", "pagebreak", "!", "-", "glossary",
 			"itcorr", "hfill", "nocorr", "small", "kill", "lstset",

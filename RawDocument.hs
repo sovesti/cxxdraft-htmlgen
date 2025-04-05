@@ -284,6 +284,7 @@ parseParas (break isParasEnd -> (extractFootnotes -> (stuff, fs), rest))
 				(p, more) = break isParaEnd x
 
 parseSections :: Int -> LaTeX -> [LinearSection]
+parseSections level (TeXComm "addtocontents" _ : others) = parseSections level others
 parseSections level
 	(TeXComm c args : (parseParas -> (lsectionParagraphs, lsectionFootnotes, more)))
 	| ((FixArg, lsectionAbbreviation), (FixArg, lsectionName), lsectionKind, level') <- case (c, args) of

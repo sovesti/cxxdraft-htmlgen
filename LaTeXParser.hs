@@ -32,7 +32,7 @@ instance Semigroup Macros where
 	x <> y = Macros
 		(commands x ++ commands y)
 		(environments x ++ environments y)
-		(counters x ++ counters y)
+		(counters y ++ counters x)
 
 instance Monoid Macros where
 	mempty = Macros mempty mempty mempty

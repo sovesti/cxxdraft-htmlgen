@@ -361,7 +361,7 @@ loadMacros =
 	snd
 	. doParse mempty
 	. replace "\\indeximpldef{" "\\index[impldefindex]{"
-	. replace "\\thetermnote{" "\\value{termnote"
+	. replace " \\thetermnote{}" ""
 	. textSubRegex (mkRegex "\\\\penalty[0-9]+") ""
 	. ("\\newcommand{\\texorpdfstring}[2]{#2}\n" ++)
 	. mconcat

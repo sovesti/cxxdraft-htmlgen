@@ -295,9 +295,10 @@ parseBegin c@Context{..} envname rest'
 				f
 					| Just _ <- lookup envname makeEnv = (:[]) . TeXEnv envname (map ((FixArg, ) . fullParse c) args)
 					| otherwise = id
-				content = f $ fullParse c together
+				result = fullParseResult c together
+				parsed = f $ concatRaws $ content result
 			in
-				prependContent content (parse c after_end)
+				prependContent parsed (parse c{macros = updateCounters macros $ newMacros result} after_end)
 	| otherwise =
 			let
 				arity
@@ -422,11 +423,14 @@ parse ctx (Token [c] : rest)
 		= prependContent [TeXRaw $ Text.pack [c]] $ parse ctx rest
 parse _ s = error $ "parse: unexpected: " ++ take 100 (concatMap tokenChars s)
 
-fullParse :: Context -> [Token] -> LaTeX
-fullParse c t
-	| all isSpace (concatMap tokenChars remainder) = concatRaws content
+fullParseResult :: Context -> [Token] -> ParseResult
+fullParseResult c t
+	| all isSpace (concatMap tokenChars (remainder result)) = result
 	| otherwise = error $ "could not fully parse: "
 		++ concatMap tokenChars t
 		++ "\n\nremainder: "
-		++ concatMap tokenChars remainder
-	where ParseResult{..} = parse c t
+		++ concatMap tokenChars (remainder result)
+	where result = parse c t
+
+fullParse :: Context -> [Token] -> LaTeX
+fullParse c t = concatRaws $ content $ fullParseResult c t

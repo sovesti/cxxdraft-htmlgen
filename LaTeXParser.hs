@@ -66,6 +66,9 @@ prependContent t p = p{content = t ++ content p}
 addMacros :: Macros -> ParseResult -> ParseResult
 addMacros m p = p{newMacros = m ++ newMacros p}
 
+updateCounter :: Text -> Int -> Macros -> Macros
+updateCounter name value m = m{counters = Map.insert name value (counters m)}
+
 defaultContext :: Context
 defaultContext = Context
 	{ commentsEnabled = True
@@ -337,21 +340,17 @@ parseCmd c@Context{..} cmd ws rest
 	, Just ([TeXRaw counter], rest') <- parseFixArg c rest
 	, Just ([TeXRaw newValue], rest'') <- parseFixArg c rest' =
 		let
-			m = Macros mempty mempty (Map.singleton counter (read $ Text.unpack newValue))
-			ParseResult p mm r = parse c{macros=macros++m} rest''
+			updated = read $ Text.unpack newValue
 		in
-			ParseResult p (m ++ mm) r
+			parse c{macros=updateCounter counter updated macros} rest''
 	| cmd == "addtocounter"
 	, Just ([TeXRaw counter], rest') <- parseFixArg c rest
 	, Just ([TeXRaw addend], rest'') <- parseFixArg c rest' =
 		let
 			Just value = Map.lookup counter (counters macros)
 			updated = value + (read $ Text.unpack addend)
-			mapped = Map.insertWith (+) counter updated (counters macros)
- 			m = Macros (commands macros) (environments macros) mapped
-			ParseResult p mm r = parse c{macros=macros++m} rest''
 		in
-			ParseResult p (m ++ mm) r
+			parse c{macros=updateCounter counter updated macros} rest''
 	| cmd == "value"
 	, Just ([TeXRaw counter], rest') <- parseFixArg c rest =
 		let

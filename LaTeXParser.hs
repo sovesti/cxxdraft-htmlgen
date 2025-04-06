@@ -32,7 +32,7 @@ instance Semigroup Macros where
 	x <> y = Macros
 		(commands x ++ commands y)
 		(environments x ++ environments y)
-		(counters y ++ counters x)
+		(Map.union (counters y) (counters x))
 
 instance Monoid Macros where
 	mempty = Macros mempty mempty mempty
@@ -295,10 +295,10 @@ parseBegin c@Context{..} envname rest'
 				f
 					| Just _ <- lookup envname makeEnv = (:[]) . TeXEnv envname (map ((FixArg, ) . fullParse c) args)
 					| otherwise = id
-				result = fullParseResult c together
-				parsed = f $ concatRaws $ content result
+				ParseResult inside m _ = fullParseResult c together
+				parsed = f $ concatRaws inside
 			in
-				prependContent parsed (parse c{macros = updateCounters macros $ newMacros result} after_end)
+				prependContent parsed (parse c{macros = updateCounters macros m} after_end)
 	| otherwise =
 			let
 				arity

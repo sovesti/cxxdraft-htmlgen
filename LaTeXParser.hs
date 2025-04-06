@@ -304,10 +304,10 @@ parseBegin c@Context{..} envname rest'
 					| Just a <- lookup envname makeEnv = a
 					| otherwise = 0
 				(arguments, rest'') = parseFixArgs c arity rest'
-				ParseResult body _ afterend = parse c rest''
+				ParseResult body m afterend = parse c rest''
 				env = TeXEnv envname (map (FixArg, ) arguments) (concatRaws body)
 			in
-				prependContent [env] (parse c afterend)
+				prependContent [env] (parse c{macros = updateCounters macros m} afterend)
 
 parseCmd :: Context -> String -> String -> [Token] -> ParseResult
 parseCmd c@Context{..} cmd ws rest

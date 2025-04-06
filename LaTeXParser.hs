@@ -346,7 +346,9 @@ parseCmd c@Context{..} cmd ws rest
 	, Just ([TeXRaw addend], rest'') <- parseFixArg c rest' =
 		let
 			Just value = Map.lookup counter (counters macros)
- 			m = Macros mempty mempty (Map.singleton counter (value + (read $ Text.unpack addend)))
+			updated = value + (read $ Text.unpack addend)
+			mapped = Map.insertWith (+) counter updated (counters macros)
+ 			m = Macros (commands macros) (environments macros) mapped
 			ParseResult p mm r = parse c{macros=macros++m} rest''
 		in
 			ParseResult p (m ++ mm) r

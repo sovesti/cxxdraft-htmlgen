@@ -69,6 +69,9 @@ addMacros m p = p{newMacros = m ++ newMacros p}
 updateCounter :: Text -> Int -> Macros -> Macros
 updateCounter name value m = m{counters = Map.insert name value (counters m)}
 
+updateCounters :: Macros -> Macros -> Macros
+updateCounters old new = old{counters = Map.union (counters new) (counters old)}
+
 defaultContext :: Context
 defaultContext = Context
 	{ commentsEnabled = True
@@ -386,8 +389,8 @@ parse c (Token "]" : x)
 	| parsingOptArg c = ParseResult mempty mempty x
 parse _ (Token "}" : x) = ParseResult mempty mempty x
 parse c (Token "{" : x) =
-	let ParseResult y _ rest = parse c x
-	in prependContent [TeXBraces y] $ parse c rest
+	let ParseResult y m rest = parse c x
+	in prependContent [TeXBraces y] $ parse c{macros = updateCounters (macros c) m} rest
 parse c (Token "%" : x)
 	| commentsEnabled c = parse c (rmLine x)
 parse _ [] = ParseResult mempty mempty mempty

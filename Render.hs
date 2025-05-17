@@ -118,8 +118,8 @@ zwsp :: Text
 zwsp = "&#x200b;" -- U+200B ZERO WIDTH SPACE
 
 makeSpan, makeDiv, makeBnfTable, makeBnfPre :: [String]
-makeSpan = words "center mbox mathsf emph terminal textsc phantom term mathtt textnormal textrm descr textsl textit mathit indented"
-makeDiv = words "definition cvqual emph exitnote footnote mathit paras ttfamily TableBase table tabular longtable"
+makeSpan = words "mbox mathsf emph terminal textsc phantom term mathtt textnormal textrm descr textsl textit mathit indented"
+makeDiv = words "center definition cvqual emph exitnote footnote mathit paras ttfamily TableBase table tabular longtable"
 makeBnfTable = words "bnfkeywordtab bnftab ncbnftab"
 makeBnfPre = words "bnf ncbnf simplebnf ncsimplebnf"
 

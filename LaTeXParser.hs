@@ -92,6 +92,7 @@ makeEnv =
 	, ("minipage", 1)
 	, ("tabular", 1)
 	, ("TableBase", 1)
+	, ("lib2dtab2base", 8)
 	, ("longtable", 1)
 	, ("indexed", 1)
 	, ("itemdecl", 0) ] -- todo: move

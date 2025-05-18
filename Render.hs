@@ -790,7 +790,7 @@ renderTable colspec a sec =
 		pc ('@' : rest) = pc rest
 		pc ('|' : '>' : rest) = pc $ '|' : rest 
 		pc ('>' : rest) = pc rest
-		pc ('|' : '|' : rest) = pc $ '|' : 'c' : '|' : rest
+		pc ('|' : '|' : rest) = "empty" : (pc $ '|' : rest)
 		pc ('|' : letter : rest) =
 			"border " ++ (colClass letter) : pc rest
 		pc (letter : rest) =
@@ -822,6 +822,7 @@ renderTable colspec a sec =
 		renderCols _ _ _ [] = ""
 		renderCols (c : cs) colnum clines (Cell{..} : rest)
 			| length cs < length rest = undefined
+			| c == "empty" = renderCols cs colnum clines rest
 			| Multicolumn w cs' <- cellSpan =
 				let
 					[c''] = parseColspec $ Text.unpack $ stripColspec cs'

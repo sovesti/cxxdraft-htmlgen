@@ -817,11 +817,24 @@ renderTable colspec a sec =
 			| otherwise = False
 
 		removeSecond :: [a] -> [a]
-		removeSecond (x : y : tail) = x : tail
+		removeSecond (x : _ : others) = x : others
 		removeSecond other = other
 
+		removeSecondFromSep :: RowSepKind -> RowSepKind
+		removeSecondFromSep (Clines segs) = Clines $ removeSecondFromSepAcc [] segs
+		removeSecondFromSep other = other
+
+		removeSecondFromSepAcc :: [(Int, Int)] -> [(Int, Int)] -> [(Int, Int)]
+		removeSecondFromSepAcc acc [] = acc
+		removeSecondFromSepAcc acc ((from, to) : others)
+				| 2 < from || to < 2 = removeSecondFromSepAcc (acc ++ [(from, to)]) others
+				| 2 == from && 2 == to = removeSecondFromSepAcc acc others
+				| 2 == from = removeSecondFromSepAcc (acc ++ [(from + 1, to)]) others
+				| 2 == to = removeSecondFromSepAcc (acc ++ [(from, to - 1)]) others
+				| otherwise = removeSecondFromSepAcc (acc ++ [(from, 1), (3, to)]) others
+
 		removeSecondFrowRow :: Row [TeXPara] -> Row [TeXPara]
-		removeSecondFrowRow Row{..} = Row { rowSep = rowSep, cells = removeSecond cells }
+		removeSecondFrowRow Row{..} = Row { rowSep = removeSecondFromSep rowSep, cells = removeSecond cells }
 
 		cleanTable :: ([Text], [Row [TeXPara]]) -> ([Text], [Row [TeXPara]])
 		cleanTable (cs, rows) = if all secondCellEmpty rows 

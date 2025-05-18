@@ -773,7 +773,7 @@ memodRenderMath = memo2 $ \s inline -> unsafePerformIO $ do
 
 renderTable :: LaTeX -> [Row [TeXPara]] -> RenderContext -> Text
 renderTable colspec a sec =
-	xml "table" [] (renderRows (parseColspec $ Text.unpack $ stripColspec colspec) a)
+	xml "table" [] (renderRows $ cleanTable (parseColspec $ Text.unpack $ stripColspec colspec, a))
 	where
 		stripColspec :: LaTeX -> Text
 		stripColspec = mconcat . (>>= f)
@@ -808,8 +808,28 @@ renderTable colspec a sec =
 			  Nothing <- Text.stripPrefix "border" newCs = "border " ++ newCs
 			| otherwise = newCs
 
-		renderRows _ [] = ""
-		renderRows cs (Row{..} : rest) =
+		empty :: Cell [TeXPara] -> Bool
+		empty Cell{..} = null content
+
+		secondCellEmpty :: Row [TeXPara] -> Bool
+		secondCellEmpty Row{..} 
+			| (_ : c : _) <- cells = empty c
+			| otherwise = False
+
+		removeSecond :: [a] -> [a]
+		removeSecond (x : y : tail) = x : tail
+		removeSecond other = other
+
+		removeSecondFrowRow :: Row [TeXPara] -> Row [TeXPara]
+		removeSecondFrowRow Row{..} = Row { rowSep = rowSep, cells = removeSecond cells }
+
+		cleanTable :: ([Text], [Row [TeXPara]]) -> ([Text], [Row [TeXPara]])
+		cleanTable (cs, rows) = if all secondCellEmpty rows 
+									then (removeSecond cs, map removeSecondFrowRow rows)
+									else (cs, rows)
+
+		renderRows (_, []) = ""
+		renderRows (cs, (Row{..} : rest)) =
 			(xml "tr" cls $ renderCols cs 1 clines cells) ++ renderRows cs rest
 			where
 				cls | RowSep <- rowSep = [("class", "rowsep")]

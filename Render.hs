@@ -827,11 +827,10 @@ renderTable colspec a sec =
 		removeSecondFromSepAcc :: [(Int, Int)] -> [(Int, Int)] -> [(Int, Int)]
 		removeSecondFromSepAcc acc [] = acc
 		removeSecondFromSepAcc acc ((from, to) : others)
-				| 2 < from || to < 2 = removeSecondFromSepAcc (acc ++ [(from, to)]) others
 				| 2 == from && 2 == to = removeSecondFromSepAcc acc others
-				| 2 == from = removeSecondFromSepAcc (acc ++ [(from + 1, to)]) others
-				| 2 == to = removeSecondFromSepAcc (acc ++ [(from, to - 1)]) others
-				| otherwise = removeSecondFromSepAcc (acc ++ [(from, 1), (3, to)]) others
+				| 2 <= from = removeSecondFromSepAcc (acc ++ [(from - 1, to - 1)]) others
+				| 2 <= to = removeSecondFromSepAcc (acc ++ [(from, to - 1)]) others
+				| otherwise = removeSecondFromSepAcc (acc ++ [(from, to)]) others
 
 		removeSecondFrowRow :: Row [TeXPara] -> Row [TeXPara]
 		removeSecondFrowRow Row{..} = Row { rowSep = removeSecondFromSep rowSep, cells = removeSecond cells }

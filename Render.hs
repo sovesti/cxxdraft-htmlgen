@@ -786,6 +786,11 @@ renderTable colspec a sec =
 		parseColspec other = pc other
 
 		pc ('|' : []) = []
+		pc ('|' : '@' : rest) = pc $ '|' : rest 
+		pc ('@' : rest) = pc rest
+		pc ('|' : '>' : rest) = pc $ '|' : rest 
+		pc ('>' : rest) = pc rest
+		pc ('|' : '|' : rest) = pc $ '|' : 'c' : '|' : rest
 		pc ('|' : letter : rest) =
 			"border " ++ (colClass letter) : pc rest
 		pc (letter : rest) =

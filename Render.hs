@@ -830,7 +830,7 @@ renderTable colspec a sec =
 
 		renderRows (_, []) = ""
 		renderRows (cs, (Row{..} : rest)) =
-			(xml "tr" cls $ renderCols cs 1 clines cells) ++ renderRows cs rest
+			(xml "tr" cls $ renderCols cs 1 clines cells) ++ renderRows (cs, rest)
 			where
 				cls | RowSep <- rowSep = [("class", "rowsep")]
 				    | CapSep <- rowSep = [("class", "capsep")]
